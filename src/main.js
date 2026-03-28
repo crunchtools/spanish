@@ -1,14 +1,18 @@
 import * as THREE from 'three';
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
-import * as TWEEN from '@tweenjs/tween.js';
+import { Easing } from '@tweenjs/tween.js';
+import { tweenGroup } from './utils/tweenGroup.js';
 import { SceneManager } from './scenes/SceneManager.js';
 import { TapToMove } from './controls/TapToMove.js';
 import { SwipeLook } from './controls/SwipeLook.js';
+import { ThirdPersonCamera } from './controls/ThirdPersonCamera.js';
 import { ObjectInteraction } from './controls/ObjectInteraction.js';
 import { HUD } from './ui/HUD.js';
+import { CharacterCreator } from './ui/CharacterCreator.js';
+import { PlayerCharacter } from './objects/PlayerCharacter.js';
 import { AudioManager } from './systems/AudioManager.js';
 import { ProgressManager } from './systems/ProgressManager.js';
-import { CAMERA_FOV, CAMERA_NEAR, CAMERA_FAR, EYE_HEIGHT } from './utils/constants.js';
+import { CAMERA_FOV, CAMERA_NEAR, CAMERA_FAR } from './utils/constants.js';
 
 class Game {
   constructor() {
@@ -19,8 +23,11 @@ class Game {
     this.sceneManager = null;
     this.tapToMove = null;
     this.swipeLook = null;
+    this.thirdPersonCamera = null;
     this.objectInteraction = null;
     this.hud = null;
+    this.characterCreator = null;
+    this.playerCharacter = null;
     this.audio = new AudioManager();
     this.progress = new ProgressManager();
     this.started = false;
@@ -35,7 +42,9 @@ class Game {
     this.hud = new HUD(this);
     this.tapToMove = new TapToMove(this);
     this.swipeLook = new SwipeLook(this);
+    this.thirdPersonCamera = new ThirdPersonCamera(this.camera);
     this.objectInteraction = new ObjectInteraction(this);
+    this.characterCreator = new CharacterCreator(this);
 
     window.addEventListener('resize', () => this.onResize());
 
@@ -64,8 +73,9 @@ class Game {
       CAMERA_NEAR,
       CAMERA_FAR
     );
-    this.camera.position.set(0, EYE_HEIGHT, 3);
-    this.camera.lookAt(0, EYE_HEIGHT, 0);
+    // Initial position (ThirdPersonCamera takes over during gameplay)
+    this.camera.position.set(0, 2.5, 7);
+    this.camera.lookAt(0, 1.0, 0);
   }
 
   setupCSS2DRenderer() {
@@ -87,21 +97,39 @@ class Game {
     playBtn.addEventListener('click', () => {
       this.audio.initAfterGesture();
       titleScreen.style.display = 'none';
-      document.getElementById('game-container').style.display = 'block';
-      this.onResize();
-      if (!this.started) {
-        this.started = true;
-        this.hud.show();
-        this.sceneManager.loadRoom('bedroom');
+
+      // If player already has a saved character, skip creator
+      if (this.progress.hasCharacter()) {
+        this.startGameWithCharacter(this.progress.getCharacter());
+      } else {
+        // Show character creator
+        this.characterCreator.show((config) => {
+          this.startGameWithCharacter(config);
+        });
       }
     }, { once: true });
+  }
+
+  startGameWithCharacter(config) {
+    // Create the player character
+    this.playerCharacter = new PlayerCharacter(config);
+
+    // Show game
+    document.getElementById('game-container').style.display = 'block';
+    this.onResize();
+
+    if (!this.started) {
+      this.started = true;
+      this.hud.show();
+      this.sceneManager.loadRoom('bedroom');
+    }
   }
 
   animate() {
     requestAnimationFrame(() => this.animate());
     this.timer.update();
     const delta = this.timer.getDelta();
-    TWEEN.update();
+    tweenGroup.update();
 
     if (this.sceneManager && this.sceneManager.activeScene) {
       this.sceneManager.update(delta);
@@ -122,5 +150,6 @@ class Game {
 
 const game = new Game();
 game.init();
+
 
 export { game };

@@ -32,8 +32,28 @@ export class SceneManager {
 
     await this.activeRoom.load();
 
-    this.game.camera.position.set(0, 1.2, 3);
-    this.game.camera.lookAt(0, 1.2, 0);
+    // Add player character to scene at spawn waypoint
+    const player = this.game.playerCharacter;
+    if (player) {
+      const spawnWp = this.activeRoom.getSpawnPoint();
+      player.setPosition(spawnWp.x, 0, spawnWp.z);
+      this.activeScene.add(player.group);
+    }
+
+    // Position camera behind character (ThirdPersonCamera handles follow)
+    if (this.game.thirdPersonCamera && player) {
+      const pos = player.getPosition();
+      const tpc = this.game.thirdPersonCamera;
+      // Place camera at its intended orbit position immediately (no lerp on first frame)
+      const offsetX = Math.sin(tpc.orbitAngle) * tpc.distance;
+      const offsetZ = Math.cos(tpc.orbitAngle) * tpc.distance;
+      this.game.camera.position.set(
+        pos.x + offsetX,
+        pos.y + tpc.heightOffset,
+        pos.z + offsetZ
+      );
+      this.game.camera.lookAt(pos.x, pos.y + tpc.lookAtYOffset, pos.z);
+    }
 
     this.game.hud.updateRoom(roomId);
     this.game.objectInteraction.setRoom(this.activeRoom);
@@ -61,6 +81,18 @@ export class SceneManager {
   update(delta) {
     if (this.activeRoom) {
       this.activeRoom.update(delta);
+    }
+
+    // Update player character
+    const player = this.game.playerCharacter;
+    if (player) {
+      player.update(delta);
+    }
+
+    // Update third person camera to follow player
+    const tpc = this.game.thirdPersonCamera;
+    if (tpc && player) {
+      tpc.update(player.getPosition());
     }
   }
 }
