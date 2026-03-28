@@ -18,6 +18,7 @@ export class Joystick {
     this.stick = document.getElementById('joystick-stick');
 
     this.maxRadius = 35; // max pixels the stick can move from center
+    this._wasMoving = false;
 
     this.onTouchStart = this.onTouchStart.bind(this);
     this.onTouchMove = this.onTouchMove.bind(this);
@@ -121,22 +122,40 @@ export class Joystick {
    * @param {number} delta - frame delta in seconds
    */
   update(delta) {
-    if (!this.active || (Math.abs(this.dx) < 0.1 && Math.abs(this.dy) < 0.1)) return;
-
     const player = this.game.playerCharacter;
     const tpc = this.game.thirdPersonCamera;
-    if (!player || !tpc || player.isWalking) return;
+    if (!player || !tpc) return;
+
+    const moving = this.active && (Math.abs(this.dx) > 0.1 || Math.abs(this.dy) > 0.1);
+
+    // Start/stop walk animation based on joystick state
+    if (moving && !this._wasMoving) {
+      player.startWalkAnimation();
+    } else if (!moving && this._wasMoving) {
+      player.stopWalkAnimation();
+    }
+    this._wasMoving = moving;
+
+    if (!moving || player.isWalking) return;
 
     const speed = 3.0; // units per second
-    const moveX = this.dx * speed * delta;
-    const moveZ = -this.dy * speed * delta; // screen Y inverted vs world Z toward camera
 
-    // Rotate movement by camera orbit angle so "up" on joystick = forward from camera perspective
-    const angle = tpc.orbitAngle;
-    const cosA = Math.cos(angle);
-    const sinA = Math.sin(angle);
-    const worldX = moveX * cosA - moveZ * sinA;
-    const worldZ = moveX * sinA + moveZ * cosA;
+    // "Up" on joystick (dy < 0) = forward from camera's perspective (toward where camera looks)
+    // Camera looks from orbit position toward character, so "forward" = toward -orbitAngle direction
+    const forward = -this.dy; // up on screen = positive forward
+    const right = this.dx;
+
+    // Camera orbit angle: angle=PI means camera is at -Z looking toward +Z
+    // "Forward" from camera view = direction from camera toward character
+    // That direction is (-sin(orbit), 0, -cos(orbit))
+    const fwdX = -Math.sin(tpc.orbitAngle);
+    const fwdZ = -Math.cos(tpc.orbitAngle);
+    // "Right" perpendicular
+    const rightX = -fwdZ;
+    const rightZ = fwdX;
+
+    const worldX = (fwdX * forward + rightX * right) * speed * delta;
+    const worldZ = (fwdZ * forward + rightZ * right) * speed * delta;
 
     const pos = player.group.position;
     const newX = pos.x + worldX;

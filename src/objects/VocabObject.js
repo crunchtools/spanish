@@ -291,21 +291,25 @@ export class VocabObject {
   }
 
   async load(assetLoader) {
-    try {
-      const model = await assetLoader.loadModel(
-        `/models/bedroom/${this.wordData.model}`
-      );
-      this.mesh = model.scene;
-      this.mesh.scale.setScalar(this.wordData.scale || 1);
-      this.mesh.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-        }
-      });
-      this.group.add(this.mesh);
-    } catch {
-      // Fallback: colored cube placeholder
+    if (this.wordData.model) {
+      try {
+        const model = await assetLoader.loadModel(
+          `/models/bedroom/${this.wordData.model}`
+        );
+        this.mesh = model.scene;
+        this.mesh.scale.setScalar(this.wordData.scale || 1);
+        this.mesh.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
+        this.group.add(this.mesh);
+      } catch {
+        this.createPlaceholder();
+      }
+    } else {
+      // No GLB model — use geometric or generic placeholder
       this.createPlaceholder();
     }
 
