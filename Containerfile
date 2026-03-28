@@ -1,5 +1,5 @@
-# Stage 1: Build with Node.js
-FROM registry.redhat.io/ubi10/nodejs-22 AS builder
+# Stage 1: Build with Node.js (public image for GHA compatibility)
+FROM docker.io/library/node:22-slim AS builder
 
 WORKDIR /app
 
