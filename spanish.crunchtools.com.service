@@ -1,0 +1,19 @@
+[Unit]
+Description=Podman container - spanish.crunchtools.com
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/podman run --systemd=always --memory=512m --memory-swap=512m -i --read-only --rm -p 127.0.0.1:8091:80 --name spanish.crunchtools.com \
+-v /srv/spanish.crunchtools.com/config/spanish.crunchtools.com.conf:/etc/httpd/conf.d/spanish.crunchtools.com.conf:ro,Z \
+-v /srv/spanish.crunchtools.com/data/logs/httpd:/var/log/httpd:Z \
+--tmpfs /etc \
+--tmpfs /var/log/ \
+--tmpfs /var/tmp \
+quay.io/crunchtools/mundo-de-palabras:latest
+ExecStop=/usr/bin/podman stop -t 3 spanish.crunchtools.com
+ExecStopPost=/usr/bin/podman rm -f spanish.crunchtools.com
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

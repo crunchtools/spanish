@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Mundo de Palabras - Spanish for Kids!</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Title Screen -->
+  <div id="title-screen" class="title-screen">
+    <div class="title-container">
+      <h1 class="game-title">Mundo de Palabras</h1>
+      <p class="subtitle">World of Words!</p>
+      <div class="title-characters">
+        <span class="char-emoji" title="Luna the Mermaid">&#x1F9DC;&#x200D;&#x2640;&#xFE0F;</span>
+        <span class="char-emoji" title="Estrella the Unicorn">&#x1F984;</span>
+        <span class="char-emoji" title="Gatito the Cat">&#x1F431;</span>
+        <span class="char-emoji" title="Zippy the Alien">&#x1F47E;</span>
+      </div>
+      <button class="btn-play" id="btn-play">
+        &#xA1;Vamos a jugar!<br><small>Let's play!</small>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-content">
+      <h2>Loading...</h2>
+      <div class="loading-bar">
+        <div class="loading-bar-fill" id="loading-bar-fill"></div>
+      </div>
+      <p id="loading-text">Preparing your adventure...</p>
+    </div>
+  </div>
+
+  <!-- Game Container (Three.js canvas goes here) -->
+  <div id="game-container" class="game-container" style="display:none">
+  </div>
+
+  <!-- Fade transition overlay -->
+  <div id="fade-overlay" class="fade-overlay"></div>
+
+  <!-- HUD Overlay -->
+  <div id="hud" class="hud" style="display:none">
+    <div class="hud-top">
+      <button class="hud-btn" id="btn-back">&#x2190; Map</button>
+      <span class="hud-room-name" id="hud-room-name">Mi Cuarto</span>
+      <span class="hud-stars" id="hud-stars">&#x2606;&#x2606;&#x2606;</span>
+    </div>
+    <div class="hud-bottom">
+      <button class="hud-activity-btn" id="btn-flashcards">&#x1F0CF; Flashcards</button>
+      <button class="hud-activity-btn" id="btn-quiz">&#x2753; Quiz</button>
+      <button class="hud-activity-btn" id="btn-matching">&#x1F3AF; Matching</button>
+    </div>
+    <!-- Guide speech bubble -->
+    <div class="guide-bubble" id="guide-bubble" style="display:none">
+      <p id="guide-bubble-text"></p>
+    </div>
+  </div>
+
+  <!-- Word Popup Overlay -->
+  <div id="word-popup-overlay" class="overlay" style="display:none">
+    <div class="overlay-card word-card-3d">
+      <button class="overlay-close" id="wp-close">&#x2715;</button>
+      <div class="wp-emoji" id="wp-emoji"></div>
+      <div class="wp-spanish" id="wp-spanish"></div>
+      <div class="wp-english" id="wp-english"></div>
+      <button class="btn-speak-3d" id="wp-speak">&#x1F50A; Listen</button>
+      <button class="btn-got-it-3d" id="wp-got-it">Got it! &#x2713;</button>
+    </div>
+  </div>
+
+  <!-- Flashcard Overlay -->
+  <div id="flashcard-overlay" class="overlay" style="display:none">
+    <div class="overlay-card flashcard-card">
+      <button class="overlay-close" id="fc-close">&#x2715;</button>
+      <div class="fc-progress" id="fc-progress">1 / 8</div>
+      <div class="fc-card-body" id="fc-card">
+        <div class="fc-face" id="fc-front-face" style="display:flex">
+          <div class="fc-emoji-big" id="fc-emoji-display"></div>
+          <div class="fc-hint">Tap to flip!</div>
+        </div>
+        <div class="fc-face" id="fc-back-face" style="display:none">
+          <div class="fc-spanish-big" id="fc-spanish-text"></div>
+          <div class="fc-english-small" id="fc-english-text"></div>
+          <button class="btn-speak-3d" id="fc-speak">&#x1F50A;</button>
+        </div>
+      </div>
+      <div class="fc-nav">
+        <button class="fc-nav-btn" id="fc-prev">&#x2B05;&#xFE0F; Prev</button>
+        <button class="fc-nav-btn" id="fc-next">Next &#x27A1;&#xFE0F;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Overlay -->
+  <div id="quiz-overlay" class="overlay" style="display:none">
+    <div class="overlay-card quiz-card">
+      <button class="overlay-close" id="quiz-close">&#x2715;</button>
+      <h2 class="overlay-title">&#x2753; Quiz Time!</h2>
+      <div class="quiz-score" id="quiz-score-display">Score: 0/0</div>
+      <div class="quiz-item">
+        <span class="quiz-emoji-big" id="quiz-emoji-display"></span>
+        <span class="quiz-english-label" id="quiz-english-display"></span>
+      </div>
+      <div class="quiz-options-grid" id="quiz-options-area"></div>
+      <div id="quiz-feedback-area" style="display:none" class="quiz-feedback-3d">
+        <p id="quiz-feedback-text"></p>
+        <button class="btn-next-3d" id="quiz-next-btn">Next &#x2192;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Matching Overlay -->
+  <div id="matching-overlay" class="overlay" style="display:none">
+    <div class="overlay-card matching-card">
+      <button class="overlay-close" id="matching-close">&#x2715;</button>
+      <h2 class="overlay-title">&#x1F3AF; Matching Game!</h2>
+      <div class="matching-status" id="matching-status">Pairs: 0/4</div>
+      <div class="matching-grid-3d" id="matching-grid"></div>
+    </div>
+  </div>
+
+  <!-- Map Overlay -->
+  <div id="map-overlay" class="overlay" style="display:none">
+    <div class="overlay-card map-card-3d">
+      <button class="overlay-close" id="map-close">&#x2715;</button>
+      <h2 class="overlay-title">&#x1F5FA;&#xFE0F; Mi Mundo <small>My World</small></h2>
+      <div class="map-stars-total">&#x2B50; <span id="map-total-stars">0</span></div>
+      <div class="map-rooms">
+        <div class="map-room-card unlocked" id="map-bedroom-card">
+          <div class="map-room-icon">&#x1F6CF;&#xFE0F;</div>
+          <div class="map-room-name">Mi Cuarto</div>
+          <div class="map-room-name-en">My Bedroom</div>
+          <div class="map-room-stars" id="map-bedroom-stars">&#x2606;&#x2606;&#x2606;</div>
+        </div>
+        <div class="map-path-dots">- - -</div>
+        <div class="map-room-card locked">
+          <div class="map-room-icon">&#x1F373;</div>
+          <div class="map-room-name">La Cocina</div>
+          <div class="map-room-name-en">The Kitchen</div>
+          <div class="map-room-stars">&#x1F512;</div>
+        </div>
+        <div class="map-path-dots">- - -</div>
+        <div class="map-room-card locked">
+          <div class="map-room-icon">&#x1F33A;</div>
+          <div class="map-room-name">El Jard&#xED;n</div>
+          <div class="map-room-name-en">The Garden</div>
+          <div class="map-room-stars">&#x1F512;</div>
+        </div>
+        <div class="map-path-dots">- - -</div>
+        <div class="map-room-card locked">
+          <div class="map-room-icon">&#x1F680;</div>
+          <div class="map-room-name">El Espacio</div>
+          <div class="map-room-name-en">Outer Space</div>
+          <div class="map-room-stars">&#x1F512;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Celebration Overlay -->
+  <div id="celebration-overlay" class="overlay" style="display:none">
+    <div class="overlay-card celebration-card">
+      <div class="celeb-confetti">&#x1F389;&#x1F38A;&#x2728;&#x2B50;&#x1F31F;&#x1F4AB;</div>
+      <h1 class="celeb-title">&#xA1;Fant&#xE1;stico!</h1>
+      <p class="celeb-message" id="celeb-text">You earned a star!</p>
+      <div class="celeb-star-big">&#x2B50;</div>
+      <div class="celeb-chars">
+        <span>&#x1F984;</span><span>&#x1F9DC;&#x200D;&#x2640;&#xFE0F;</span><span>&#x1F431;</span><span>&#x1F47E;</span>
+      </div>
+      <button class="btn-play" id="celeb-continue">Keep Learning!</button>
+    </div>
+  </div>
+
+  <!-- Joke Popup Overlay -->
+  <div id="joke-overlay" class="overlay" style="display:none">
+    <div class="overlay-card joke-card-3d">
+      <div class="joke-cat">&#x1F431;</div>
+      <div id="joke-content-area" class="joke-content-3d"></div>
+      <button class="btn-got-it-3d" id="joke-close-btn">&#x1F602; Jaja!</button>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

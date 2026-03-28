@@ -1,0 +1,18 @@
+{
+  "name": "mundo-de-palabras",
+  "version": "1.0.0",
+  "description": "3D Spanish vocabulary game for kids",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "license": "AGPL-3.0-or-later",
+  "author": "Scott McCarty",
+  "dependencies": {
+    "@tweenjs/tween.js": "^25.0.0",
+    "three": "^0.183.2",
+    "vite": "^8.0.3"
+  }
+}
