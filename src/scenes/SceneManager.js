@@ -40,19 +40,11 @@ export class SceneManager {
       this.activeScene.add(player.group);
     }
 
-    // Position camera behind character (ThirdPersonCamera handles follow)
+    // Position camera — let ThirdPersonCamera calculate clamped position
     if (this.game.thirdPersonCamera && player) {
-      const pos = player.getPosition();
       const tpc = this.game.thirdPersonCamera;
-      // Place camera at its intended orbit position immediately (no lerp on first frame)
-      const offsetX = Math.sin(tpc.orbitAngle) * tpc.distance;
-      const offsetZ = Math.cos(tpc.orbitAngle) * tpc.distance;
-      this.game.camera.position.set(
-        pos.x + offsetX,
-        pos.y + tpc.heightOffset,
-        pos.z + offsetZ
-      );
-      this.game.camera.lookAt(pos.x, pos.y + tpc.lookAtYOffset, pos.z);
+      // Run update once with instant snap (no lerp) to set initial position
+      tpc.update(player.getPosition(), true);
     }
 
     this.game.hud.updateRoom(roomId);
@@ -81,6 +73,11 @@ export class SceneManager {
   update(delta) {
     if (this.activeRoom) {
       this.activeRoom.update(delta);
+    }
+
+    // Update joystick movement
+    if (this.game.joystick) {
+      this.game.joystick.update(delta);
     }
 
     // Update player character

@@ -113,6 +113,158 @@ const GEOMETRIC_MODELS = {
 
     return group;
   },
+  'oso de peluche'() {
+    // Block teddy bear sitting on floor against wall
+    const group = new THREE.Group();
+    const furMat = new THREE.MeshStandardMaterial({ color: 0xC49A6C, roughness: 0.9 });
+
+    // Body (round-ish, use box)
+    const bodyGeo = new THREE.BoxGeometry(0.35, 0.4, 0.3);
+    const body = new THREE.Mesh(bodyGeo, furMat);
+    body.position.y = 0.2;
+    group.add(body);
+
+    // Head
+    const headGeo = new THREE.BoxGeometry(0.3, 0.3, 0.28);
+    const head = new THREE.Mesh(headGeo, furMat.clone());
+    head.position.set(0, 0.52, 0);
+    group.add(head);
+
+    // Ears
+    const earGeo = new THREE.BoxGeometry(0.1, 0.1, 0.08);
+    const leftEar = new THREE.Mesh(earGeo, furMat.clone());
+    leftEar.position.set(-0.13, 0.7, 0);
+    group.add(leftEar);
+    const rightEar = new THREE.Mesh(earGeo.clone(), furMat.clone());
+    rightEar.position.set(0.13, 0.7, 0);
+    group.add(rightEar);
+
+    // Eyes
+    const eyeMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
+    const eyeGeo = new THREE.BoxGeometry(0.05, 0.05, 0.02);
+    const lEye = new THREE.Mesh(eyeGeo, eyeMat);
+    lEye.position.set(-0.07, 0.56, 0.14);
+    group.add(lEye);
+    const rEye = new THREE.Mesh(eyeGeo.clone(), eyeMat.clone());
+    rEye.position.set(0.07, 0.56, 0.14);
+    group.add(rEye);
+
+    // Nose
+    const noseMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
+    const noseGeo = new THREE.BoxGeometry(0.06, 0.04, 0.03);
+    const nose = new THREE.Mesh(noseGeo, noseMat);
+    nose.position.set(0, 0.48, 0.14);
+    group.add(nose);
+
+    // Arms
+    const armGeo = new THREE.BoxGeometry(0.12, 0.25, 0.12);
+    const lArm = new THREE.Mesh(armGeo, furMat.clone());
+    lArm.position.set(-0.25, 0.22, 0.05);
+    lArm.rotation.z = 0.4;
+    group.add(lArm);
+    const rArm = new THREE.Mesh(armGeo.clone(), furMat.clone());
+    rArm.position.set(0.25, 0.22, 0.05);
+    rArm.rotation.z = -0.4;
+    group.add(rArm);
+
+    // Legs (sitting, splayed forward)
+    const legGeo = new THREE.BoxGeometry(0.14, 0.12, 0.22);
+    const lLeg = new THREE.Mesh(legGeo, furMat.clone());
+    lLeg.position.set(-0.1, 0.06, 0.12);
+    group.add(lLeg);
+    const rLeg = new THREE.Mesh(legGeo.clone(), furMat.clone());
+    rLeg.position.set(0.1, 0.06, 0.12);
+    group.add(rLeg);
+
+    return group;
+  },
+
+  lámpara() {
+    // Floor lamp: tall pole + shade
+    const group = new THREE.Group();
+
+    // Base
+    const baseMat = new THREE.MeshStandardMaterial({ color: 0x444444, roughness: 0.3, metalness: 0.6 });
+    const baseGeo = new THREE.BoxGeometry(0.3, 0.05, 0.3);
+    const base = new THREE.Mesh(baseGeo, baseMat);
+    base.position.y = 0.025;
+    group.add(base);
+
+    // Pole
+    const poleGeo = new THREE.BoxGeometry(0.04, 1.2, 0.04);
+    const pole = new THREE.Mesh(poleGeo, baseMat.clone());
+    pole.position.y = 0.65;
+    group.add(pole);
+
+    // Shade (trapezoid-ish box)
+    const shadeMat = new THREE.MeshStandardMaterial({
+      color: 0xFFF8DC,
+      roughness: 0.8,
+      emissive: 0xFFF8DC,
+      emissiveIntensity: 0.3,
+    });
+    const shadeGeo = new THREE.BoxGeometry(0.4, 0.3, 0.4);
+    const shade = new THREE.Mesh(shadeGeo, shadeMat);
+    shade.position.y = 1.35;
+    group.add(shade);
+
+    return group;
+  },
+
+  libro() {
+    // Small bookshelf with books on it
+    const group = new THREE.Group();
+    const woodMat = new THREE.MeshStandardMaterial({ color: 0x8B6914, roughness: 0.7 });
+
+    // Shelf frame — two sides + two shelves + back
+    const sideGeo = new THREE.BoxGeometry(0.05, 0.9, 0.3);
+    const leftSide = new THREE.Mesh(sideGeo, woodMat);
+    leftSide.position.set(-0.3, 0.45, 0);
+    group.add(leftSide);
+    const rightSide = new THREE.Mesh(sideGeo.clone(), woodMat.clone());
+    rightSide.position.set(0.3, 0.45, 0);
+    group.add(rightSide);
+
+    const shelfGeo = new THREE.BoxGeometry(0.65, 0.04, 0.3);
+    const bottomShelf = new THREE.Mesh(shelfGeo, woodMat.clone());
+    bottomShelf.position.set(0, 0.02, 0);
+    group.add(bottomShelf);
+    const midShelf = new THREE.Mesh(shelfGeo.clone(), woodMat.clone());
+    midShelf.position.set(0, 0.45, 0);
+    group.add(midShelf);
+    const topShelf = new THREE.Mesh(shelfGeo.clone(), woodMat.clone());
+    topShelf.position.set(0, 0.9, 0);
+    group.add(topShelf);
+
+    // Back panel
+    const backGeo = new THREE.BoxGeometry(0.65, 0.9, 0.02);
+    const back = new THREE.Mesh(backGeo, woodMat.clone());
+    back.position.set(0, 0.45, -0.14);
+    group.add(back);
+
+    // Books on shelves (colored blocks, leaning)
+    const bookColors = [0xEF4444, 0x3B82F6, 0x10B981, 0xF59E0B, 0x8B5CF6, 0xEC4899];
+    const bookData = [
+      // Bottom shelf
+      { x: -0.15, y: 0.22, w: 0.08, h: 0.35, c: 0 },
+      { x: -0.05, y: 0.22, w: 0.06, h: 0.38, c: 1 },
+      { x: 0.04, y: 0.22, w: 0.07, h: 0.32, c: 2 },
+      { x: 0.13, y: 0.22, w: 0.06, h: 0.36, c: 3 },
+      // Top shelf
+      { x: -0.12, y: 0.67, w: 0.07, h: 0.34, c: 4 },
+      { x: -0.03, y: 0.67, w: 0.08, h: 0.30, c: 5 },
+      { x: 0.08, y: 0.67, w: 0.06, h: 0.36, c: 0 },
+    ];
+    bookData.forEach((b) => {
+      const bookMat = new THREE.MeshStandardMaterial({ color: bookColors[b.c], roughness: 0.6 });
+      const bookGeo = new THREE.BoxGeometry(b.w, b.h, 0.2);
+      const book = new THREE.Mesh(bookGeo, bookMat);
+      book.position.set(b.x, b.y, 0);
+      group.add(book);
+    });
+
+    return group;
+  },
 };
 
 export class VocabObject {
@@ -192,19 +344,26 @@ export class VocabObject {
     const div = document.createElement('div');
     div.className = 'vocab-label';
     div.textContent = this.wordData.spanish;
-    div.style.display = 'none';
 
     this.label = new CSS2DObject(div);
     this.label.position.set(0, 1.2, 0);
+    this.label.visible = false; // hidden until learned + labels toggled on
     this.group.add(this.label);
   }
 
   showLabel() {
-    if (this.label) {
-      this.label.element.style.display = 'block';
-      this.labelVisible = true;
-    }
+    this.labelVisible = true;
     this.learned = true;
+    // Only actually display if global labels toggle is on
+    if (this.label) {
+      this.label.visible = !!this.game._labelsVisible;
+    }
+  }
+
+  setLabelDisplay(visible) {
+    if (!this.label) return;
+    // Only show if this object has been learned AND global toggle is on
+    this.label.visible = visible && this.labelVisible;
   }
 
   bounce() {

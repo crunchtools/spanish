@@ -36,7 +36,7 @@ export class ThirdPersonCamera {
    * Call this every frame.
    * @param {THREE.Vector3} targetPos - The character's world position
    */
-  update(targetPos) {
+  update(targetPos, snap = false) {
     // Calculate desired camera position from orbit angle + offset
     const offsetX = Math.sin(this.orbitAngle) * this.distance;
     const offsetZ = Math.cos(this.orbitAngle) * this.distance;
@@ -55,8 +55,12 @@ export class ThirdPersonCamera {
     this._desiredPos.y = Math.min(ROOM_HEIGHT - 0.3, this._desiredPos.y);
     this._desiredPos.y = Math.max(0.5, this._desiredPos.y);
 
-    // Lerp camera toward desired position
-    this.camera.position.lerp(this._desiredPos, this.lerpFactor);
+    // Lerp camera toward desired position (or snap instantly)
+    if (snap) {
+      this.camera.position.copy(this._desiredPos);
+    } else {
+      this.camera.position.lerp(this._desiredPos, this.lerpFactor);
+    }
 
     // Look at character chest height
     this._lookTarget.set(

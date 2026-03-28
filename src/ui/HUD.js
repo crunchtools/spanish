@@ -39,6 +39,17 @@ export class HUD {
       }
     });
 
+    document.getElementById('btn-labels').addEventListener('click', () => {
+      this.game._labelsVisible = !this.game._labelsVisible;
+      const btn = document.getElementById('btn-labels');
+      btn.style.opacity = this.game._labelsVisible ? '1' : '0.5';
+      // Toggle all vocab labels in current room
+      const room = this.game.sceneManager?.activeRoom;
+      if (room) {
+        room.getVocabObjects().forEach((v) => v.setLabelDisplay(this.game._labelsVisible));
+      }
+    });
+
     document.getElementById('btn-flashcards').addEventListener('click', () => {
       this.flashcard.show(this.currentRoomId);
     });

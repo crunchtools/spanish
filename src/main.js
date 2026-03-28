@@ -7,6 +7,7 @@ import { TapToMove } from './controls/TapToMove.js';
 import { SwipeLook } from './controls/SwipeLook.js';
 import { ThirdPersonCamera } from './controls/ThirdPersonCamera.js';
 import { ObjectInteraction } from './controls/ObjectInteraction.js';
+import { Joystick } from './controls/Joystick.js';
 import { HUD } from './ui/HUD.js';
 import { CharacterCreator } from './ui/CharacterCreator.js';
 import { PlayerCharacter } from './objects/PlayerCharacter.js';
@@ -25,12 +26,14 @@ class Game {
     this.swipeLook = null;
     this.thirdPersonCamera = null;
     this.objectInteraction = null;
+    this.joystick = null;
     this.hud = null;
     this.characterCreator = null;
     this.playerCharacter = null;
     this.audio = new AudioManager();
     this.progress = new ProgressManager();
     this.started = false;
+    this._labelsVisible = false;
   }
 
   init() {
@@ -44,6 +47,7 @@ class Game {
     this.swipeLook = new SwipeLook(this);
     this.thirdPersonCamera = new ThirdPersonCamera(this.camera);
     this.objectInteraction = new ObjectInteraction(this);
+    this.joystick = new Joystick(this);
     this.characterCreator = new CharacterCreator(this);
 
     window.addEventListener('resize', () => this.onResize());
@@ -121,6 +125,7 @@ class Game {
     if (!this.started) {
       this.started = true;
       this.hud.show();
+      this.joystick.show();
       this.sceneManager.loadRoom('bedroom');
     }
   }

@@ -90,6 +90,13 @@
   <!-- Fade transition overlay -->
   <div id="fade-overlay" class="fade-overlay"></div>
 
+  <!-- Virtual Joystick -->
+  <div id="joystick-zone" class="joystick-zone" style="display:none">
+    <div id="joystick-base" class="joystick-base">
+      <div id="joystick-stick" class="joystick-stick"></div>
+    </div>
+  </div>
+
   <!-- HUD Overlay -->
   <div id="hud" class="hud" style="display:none">
     <div class="hud-top">
@@ -99,6 +106,7 @@
       <span class="hud-stars" id="hud-stars">&#x2606;&#x2606;&#x2606;</span>
     </div>
     <div class="hud-bottom">
+      <button class="hud-activity-btn" id="btn-labels">&#x1F3F7; Labels</button>
       <button class="hud-activity-btn" id="btn-flashcards">&#x1F0CF; Flashcards</button>
       <button class="hud-activity-btn" id="btn-quiz">&#x2753; Quiz</button>
       <button class="hud-activity-btn" id="btn-matching">&#x1F3AF; Matching</button>

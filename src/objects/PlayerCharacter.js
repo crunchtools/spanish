@@ -59,8 +59,9 @@ export class PlayerCharacter {
    * Place the character at a position.
    */
   setPosition(x, y, z) {
-    this.group.position.set(x, y, z);
-    this.baseY = y;
+    // Offset down so shoe bottoms touch the floor (shoes end at y≈0.29 in model space)
+    this.group.position.set(x, y - 0.29, z);
+    this.baseY = y - 0.29;
   }
 
   getPosition() {

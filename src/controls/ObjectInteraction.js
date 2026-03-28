@@ -43,7 +43,7 @@ export class ObjectInteraction {
 
       if (vocabObj) {
         this.justInteracted = true;
-        setTimeout(() => { this.justInteracted = false; }, 100);
+        setTimeout(() => { this.justInteracted = false; }, 300);
         this.interactWith(vocabObj);
       }
     }

@@ -120,11 +120,9 @@ export class RoomBase {
   }
 
   addGuide() {
-    this.guide = new GuideModel(this.roomData.guide, this.game);
-    this.scene.add(this.guide.sprite);
-    if (this.guide.labelObject) {
-      this.scene.add(this.guide.labelObject);
-    }
+    // Guide disabled for now — will return in a later room
+    // this.guide = new GuideModel(this.roomData.guide, this.game);
+    // this.scene.add(this.guide.sprite);
   }
 
   async addVocabObjects() {
