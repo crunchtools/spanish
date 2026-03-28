@@ -3,11 +3,18 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export class AssetLoader {
   constructor() {
-    this.gltfLoader = new GLTFLoader();
     this.loadingManager = new THREE.LoadingManager();
+    this.gltfLoader = new GLTFLoader(this.loadingManager);
     this.cache = new Map();
+    this.totalToLoad = 0;
+    this.loaded = 0;
 
-    this.loadingManager.onProgress = (url, loaded, total) => {
+    this.loadingManager.onStart = () => {
+      const overlay = document.getElementById('loading-overlay');
+      if (overlay) overlay.style.display = 'flex';
+    };
+
+    this.loadingManager.onProgress = (_url, loaded, total) => {
       const progress = (loaded / total) * 100;
       this.updateLoadingBar(progress);
     };
@@ -15,11 +22,14 @@ export class AssetLoader {
     this.loadingManager.onLoad = () => {
       this.hideLoadingBar();
     };
+
+    this.loadingManager.onError = () => {
+      // Don't block on failed loads — placeholders handle it
+    };
   }
 
   loadModel(path) {
     if (this.cache.has(path)) {
-      // Clone cached model
       const cached = this.cache.get(path);
       return Promise.resolve({
         scene: cached.scene.clone(),
@@ -35,7 +45,6 @@ export class AssetLoader {
         },
         undefined,
         (error) => {
-          console.warn(`Failed to load model: ${path}`, error);
           reject(error);
         }
       );
