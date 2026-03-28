@@ -8,17 +8,25 @@ export class ObjectInteraction {
     this.raycaster = new THREE.Raycaster();
     this.justInteracted = false;
     this.jokeCounter = 0;
+    this.hoveredVocab = null;
 
     this.onPointerUp = this.onPointerUp.bind(this);
+    this.onPointerMove = this.onPointerMove.bind(this);
+
     this.game.renderer.domElement.addEventListener('pointerup', this.onPointerUp);
+    this.game.renderer.domElement.addEventListener('pointermove', this.onPointerMove);
   }
 
   setRoom(room) {
     this.room = room;
+    this.hoveredVocab = null;
   }
 
-  onPointerUp(event) {
-    if (!this.room || this.game.swipeLook.isSwiping || this.game.tapToMove.isMoving) return;
+  /**
+   * Raycast to find which VocabObject (if any) is under the pointer.
+   */
+  raycastVocab(event) {
+    if (!this.room) return null;
 
     const pointer = new THREE.Vector2(
       (event.clientX / window.innerWidth) * 2 - 1,
@@ -31,21 +39,47 @@ export class ObjectInteraction {
     const hits = this.raycaster.intersectObjects(interactables, true);
 
     if (hits.length > 0) {
-      // Find which VocabObject was hit
       let hitGroup = hits[0].object;
       while (hitGroup.parent && !hitGroup.userData.vocabWord) {
         hitGroup = hitGroup.parent;
       }
 
-      const vocabObj = this.room.getVocabObjects().find(
-        (v) => v.group === hitGroup
-      );
+      return this.room.getVocabObjects().find((v) => v.group === hitGroup) || null;
+    }
 
-      if (vocabObj) {
-        this.justInteracted = true;
-        setTimeout(() => { this.justInteracted = false; }, 300);
-        this.interactWith(vocabObj);
+    return null;
+  }
+
+  onPointerMove(event) {
+    if (!this.room) return;
+
+    const vocabObj = this.raycastVocab(event);
+
+    if (vocabObj !== this.hoveredVocab) {
+      // Unhighlight previous
+      if (this.hoveredVocab) {
+        this.hoveredVocab.setHighlight(false);
       }
+      // Highlight new
+      if (vocabObj) {
+        vocabObj.setHighlight(true);
+      }
+      this.hoveredVocab = vocabObj;
+
+      // Cursor
+      this.game.renderer.domElement.style.cursor = vocabObj ? 'pointer' : '';
+    }
+  }
+
+  onPointerUp(event) {
+    if (!this.room || this.game.swipeLook.isSwiping || this.game.tapToMove.isMoving) return;
+
+    const vocabObj = this.raycastVocab(event);
+
+    if (vocabObj) {
+      this.justInteracted = true;
+      setTimeout(() => { this.justInteracted = false; }, 300);
+      this.interactWith(vocabObj);
     }
   }
 
@@ -99,5 +133,6 @@ export class ObjectInteraction {
 
   dispose() {
     this.game.renderer.domElement.removeEventListener('pointerup', this.onPointerUp);
+    this.game.renderer.domElement.removeEventListener('pointermove', this.onPointerMove);
   }
 }

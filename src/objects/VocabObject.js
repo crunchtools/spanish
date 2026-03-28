@@ -313,7 +313,33 @@ export class VocabObject {
       this.createPlaceholder();
     }
 
+    // Add invisible hit box for reliable click/hover detection
+    this.addHitBox();
+
     this.createLabel();
+  }
+
+  addHitBox() {
+    if (!this.mesh) return;
+
+    // Compute bounding box of the mesh
+    const box = new THREE.Box3().setFromObject(this.mesh);
+    const size = new THREE.Vector3();
+    const center = new THREE.Vector3();
+    box.getSize(size);
+    box.getCenter(center);
+
+    // Minimum clickable size
+    size.x = Math.max(size.x, 0.5);
+    size.y = Math.max(size.y, 0.5);
+    size.z = Math.max(size.z, 0.5);
+
+    const hitGeo = new THREE.BoxGeometry(size.x, size.y, size.z);
+    const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+    this.hitBox = new THREE.Mesh(hitGeo, hitMat);
+    // Position relative to group origin
+    this.hitBox.position.copy(center).sub(this.group.position);
+    this.group.add(this.hitBox);
   }
 
   createPlaceholder() {
@@ -368,6 +394,18 @@ export class VocabObject {
     if (!this.label) return;
     // Only show if this object has been learned AND global toggle is on
     this.label.visible = visible && this.labelVisible;
+  }
+
+  setHighlight(on) {
+    if (!this.mesh) return;
+    const intensity = on ? 0.4 : 0;
+    const color = 0xfbbf24; // warm yellow highlight
+    this.mesh.traverse((child) => {
+      if (child.isMesh && child.material && child.material.emissive) {
+        child.material.emissive.setHex(on ? color : 0x000000);
+        child.material.emissiveIntensity = intensity;
+      }
+    });
   }
 
   bounce() {

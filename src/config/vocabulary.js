@@ -39,7 +39,7 @@ export const rooms = {
         spanish: 'la lámpara',
         english: 'lamp',
         word: 'lámpara',
-        position: { x: -0.5, y: 0, z: -3.0 },
+        position: { x: 0.8, y: 0, z: -3.0 },
         rotation: 0,
         scale: 1,
       },
