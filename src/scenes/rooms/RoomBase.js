@@ -48,7 +48,7 @@ export class RoomBase {
       color: this.roomData.wallColor,
       roughness: 0.9,
       metalness: 0,
-      side: THREE.BackSide,
+      side: THREE.DoubleSide,
     });
 
     // Back wall
@@ -101,9 +101,14 @@ export class RoomBase {
     this.scene.add(directional);
 
     // Warm fill light from opposite side
-    const fill = new THREE.DirectionalLight(0xffeedd, 0.3);
+    const fill = new THREE.DirectionalLight(0xffeedd, 0.4);
     fill.position.set(-2, 2, -1);
     this.scene.add(fill);
+
+    // Overhead point light for even room coverage
+    const overhead = new THREE.PointLight(0xfff5e6, 0.5, 10);
+    overhead.position.set(0, 2.8, 0);
+    this.scene.add(overhead);
   }
 
   addWaypoints() {
