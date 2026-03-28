@@ -6,7 +6,6 @@ export class SwipeLook {
     this.isSwiping = false;
     this.startX = 0;
     this.startY = 0;
-    this.yaw = 0;
 
     this.onPointerDown = this.onPointerDown.bind(this);
     this.onPointerMove = this.onPointerMove.bind(this);
@@ -32,15 +31,13 @@ export class SwipeLook {
 
     if (distance > SWIPE_THRESHOLD) {
       this.isSwiping = true;
-      // Y-axis rotation only (horizontal swipe)
-      this.game.camera.rotation.y -= (event.movementX || 0) * LOOK_SPEED;
 
-      // Clamp vertical look slightly
-      const pitchDelta = (event.movementY || 0) * LOOK_SPEED * 0.5;
-      this.game.camera.rotation.x = Math.max(
-        -0.5,
-        Math.min(0.3, this.game.camera.rotation.x - pitchDelta)
-      );
+      // Orbit around character via ThirdPersonCamera
+      const tpc = this.game.thirdPersonCamera;
+      if (tpc) {
+        const movementX = event.movementX || 0;
+        tpc.setOrbitAngle(tpc.orbitAngle - movementX * LOOK_SPEED);
+      }
     }
   }
 

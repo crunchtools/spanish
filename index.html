@@ -26,6 +26,52 @@
     </div>
   </div>
 
+  <!-- Character Creator Overlay -->
+  <div id="character-creator-overlay" class="cc-overlay" style="display:none">
+    <div class="cc-container">
+      <h2 class="cc-title">Create Your Character!</h2>
+      <p class="cc-subtitle">Crea tu personaje</p>
+      <div class="cc-body">
+        <div class="cc-preview">
+          <canvas id="cc-preview-canvas" width="200" height="300"></canvas>
+        </div>
+        <div class="cc-controls">
+          <div class="cc-section">
+            <label class="cc-label">Hair Style / Estilo</label>
+            <div id="cc-hair-style" class="cc-option-row"></div>
+          </div>
+          <div class="cc-section">
+            <label class="cc-label">Hair Color / Color de pelo</label>
+            <div id="cc-hair-colors" class="cc-swatch-row"></div>
+          </div>
+          <div class="cc-section">
+            <label class="cc-label">Skin / Piel</label>
+            <div id="cc-skin-colors" class="cc-swatch-row"></div>
+          </div>
+          <div class="cc-section">
+            <label class="cc-label">Shirt / Camisa</label>
+            <div id="cc-shirt-colors" class="cc-swatch-row"></div>
+          </div>
+          <div class="cc-section">
+            <label class="cc-label">Pattern / Patr&#xF3;n</label>
+            <div id="cc-shirt-pattern" class="cc-option-row"></div>
+          </div>
+          <div class="cc-section">
+            <label class="cc-label">Pants / Pantalones</label>
+            <div id="cc-pants-colors" class="cc-swatch-row"></div>
+          </div>
+          <div class="cc-section">
+            <label class="cc-label">Shoes / Zapatos</label>
+            <div id="cc-shoe-colors" class="cc-swatch-row"></div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-play cc-ready-btn" id="cc-ready-btn">
+        Ready! &#xA1;Vamos!
+      </button>
+    </div>
+  </div>
+
   <!-- Loading Overlay -->
   <div id="loading-overlay" class="loading-overlay" style="display:none">
     <div class="loading-content">
@@ -48,6 +94,7 @@
   <div id="hud" class="hud" style="display:none">
     <div class="hud-top">
       <button class="hud-btn" id="btn-back">&#x2190; Map</button>
+      <button class="hud-btn" id="btn-change-char">&#x1F464; Character</button>
       <span class="hud-room-name" id="hud-room-name">Mi Cuarto</span>
       <span class="hud-stars" id="hud-stars">&#x2606;&#x2606;&#x2606;</span>
     </div>

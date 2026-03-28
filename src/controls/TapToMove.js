@@ -1,6 +1,4 @@
 import * as THREE from 'three';
-import * as TWEEN from '@tweenjs/tween.js';
-import { EYE_HEIGHT, TWEEN_DURATION } from '../utils/constants.js';
 
 export class TapToMove {
   constructor(game) {
@@ -77,32 +75,23 @@ export class TapToMove {
   }
 
   moveToWaypoint(wp) {
+    const player = this.game.playerCharacter;
+    if (!player) return;
+
     this.isMoving = true;
-    const cam = this.game.camera;
-    const target = { x: wp.x, y: EYE_HEIGHT, z: wp.z };
 
-    // Tween camera position
-    new TWEEN.Tween(cam.position)
-      .to(target, TWEEN_DURATION)
-      .easing(TWEEN.Easing.Quadratic.InOut)
-      .onComplete(() => {
+    // Walk the character to the waypoint
+    player.walkTo(wp.x, wp.z);
+
+    // Wait for the walk tween to finish
+    const checkDone = () => {
+      if (!player.isWalking) {
         this.isMoving = false;
-      })
-      .start();
-
-    // Look toward center of room from new position
-    const lookTarget = new THREE.Vector3(0, EYE_HEIGHT, 0);
-    const currentLook = new THREE.Vector3();
-    cam.getWorldDirection(currentLook);
-    currentLook.add(cam.position);
-
-    new TWEEN.Tween(currentLook)
-      .to({ x: lookTarget.x, y: lookTarget.y, z: lookTarget.z }, TWEEN_DURATION)
-      .easing(TWEEN.Easing.Quadratic.InOut)
-      .onUpdate(() => {
-        cam.lookAt(currentLook);
-      })
-      .start();
+      } else {
+        requestAnimationFrame(checkDone);
+      }
+    };
+    requestAnimationFrame(checkDone);
   }
 
   dispose() {

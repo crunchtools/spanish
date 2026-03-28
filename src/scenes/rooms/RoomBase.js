@@ -145,6 +145,12 @@ export class RoomBase {
     }
   }
 
+  getSpawnPoint() {
+    // Spawn at center of room so camera has room behind the character
+    const center = this.roomData.waypoints.find((wp) => wp.label === 'center');
+    return center || this.roomData.waypoints[0] || { x: 0, z: 0 };
+  }
+
   getFloor() {
     return this.floor;
   }

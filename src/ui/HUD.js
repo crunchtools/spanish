@@ -28,6 +28,17 @@ export class HUD {
       this.map.show();
     });
 
+    document.getElementById('btn-change-char').addEventListener('click', () => {
+      if (this.game.characterCreator) {
+        this.game.characterCreator.show((config) => {
+          // Rebuild the in-scene character with new config
+          if (this.game.playerCharacter) {
+            this.game.playerCharacter.rebuild(config);
+          }
+        });
+      }
+    });
+
     document.getElementById('btn-flashcards').addEventListener('click', () => {
       this.flashcard.show(this.currentRoomId);
     });

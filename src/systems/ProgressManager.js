@@ -27,7 +27,21 @@ export class ProgressManager {
       stars: { bedroom: 0 },
       unlockedRooms: ['bedroom'],
       lastRoom: 'bedroom',
+      character: null,
     };
+  }
+
+  hasCharacter() {
+    return this.data.character !== null;
+  }
+
+  getCharacter() {
+    return this.data.character;
+  }
+
+  saveCharacter(config) {
+    this.data.character = config;
+    this.save();
   }
 
   save() {
