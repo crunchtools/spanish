@@ -112,11 +112,7 @@ export class RoomBase {
   }
 
   addWaypoints() {
-    this.roomData.waypoints.forEach((wp) => {
-      const arrow = new WaypointArrow(wp, this.game);
-      this.scene.add(arrow.mesh);
-      this.waypointArrows.push(arrow);
-    });
+    // Waypoint arrows disabled — joystick is the primary movement control
   }
 
   addGuide() {

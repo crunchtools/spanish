@@ -30,7 +30,7 @@ export const rooms = {
         english: 'bed',
         word: 'cama',
         model: 'bed.glb',
-        position: { x: -2, y: 0, z: -2 },
+        position: { x: -2.7, y: 0, z: -1.5 },
         rotation: 0,
         scale: 1.8,
       },
