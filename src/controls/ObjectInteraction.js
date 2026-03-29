@@ -39,12 +39,39 @@ export class ObjectInteraction {
     const hits = this.raycaster.intersectObjects(interactables, true);
 
     if (hits.length > 0) {
-      let hitGroup = hits[0].object;
-      while (hitGroup.parent && !hitGroup.userData.vocabWord) {
-        hitGroup = hitGroup.parent;
+      // Collect all unique vocab objects hit
+      const hitVocabs = [];
+      const seen = new Set();
+      for (const hit of hits) {
+        let hitGroup = hit.object;
+        while (hitGroup.parent && !hitGroup.userData.vocabWord) {
+          hitGroup = hitGroup.parent;
+        }
+        const word = hitGroup.userData.vocabWord;
+        if (word && !seen.has(word)) {
+          seen.add(word);
+          const v = this.room.getVocabObjects().find((vo) => vo.group === hitGroup);
+          if (v) hitVocabs.push(v);
+        }
       }
 
-      return this.room.getVocabObjects().find((v) => v.group === hitGroup) || null;
+      if (hitVocabs.length === 0) return null;
+      if (hitVocabs.length === 1) return hitVocabs[0];
+
+      // When multiple objects overlap, prefer the smallest one
+      let smallest = hitVocabs[0];
+      let smallestVol = Infinity;
+      for (const v of hitVocabs) {
+        if (v.collisionBox) {
+          const cb = v.collisionBox;
+          const vol = (cb.maxX - cb.minX) * (cb.maxY - cb.minY) * (cb.maxZ - cb.minZ);
+          if (vol < smallestVol) {
+            smallestVol = vol;
+            smallest = v;
+          }
+        }
+      }
+      return smallest;
     }
 
     return null;
@@ -124,11 +151,7 @@ export class ObjectInteraction {
       );
     }
 
-    // Knock-knock joke every 4 interactions
-    this.jokeCounter++;
-    if (this.jokeCounter % 4 === 0) {
-      setTimeout(() => this.game.hud.showRandomJoke(), 800);
-    }
+    // Jokes disabled for now — will revisit placement later
   }
 
   dispose() {

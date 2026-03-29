@@ -10,7 +10,7 @@ export const ROOM_DEPTH = 7;
 export const ROOM_HEIGHT = 3;
 
 // Controls
-export const SWIPE_THRESHOLD = 25;
+export const SWIPE_THRESHOLD = 40;
 export const TWEEN_DURATION = 800;
 export const LOOK_SPEED = 0.003;
 

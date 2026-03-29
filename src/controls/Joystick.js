@@ -182,29 +182,32 @@ export class Joystick {
 
   /**
    * Check if position (x, z) collides with any vocab object.
-   * Uses hitbox bounding boxes for collision.
+   * Uses actual mesh bounds (not inflated hitboxes) for collision.
    */
   checkCollision(x, z) {
     const room = this.game.sceneManager?.activeRoom;
     if (!room) return false;
 
-    const playerRadius = 0.3;
+    const playerRadius = 0.25;
 
     for (const v of room.getVocabObjects()) {
-      if (!v.hitBox) continue;
+      if (!v.mesh || !v.collisionBox) continue;
 
-      const hitWorld = new THREE.Vector3();
-      v.hitBox.getWorldPosition(hitWorld);
+      const cb = v.collisionBox;
 
-      const params = v.hitBox.geometry.parameters;
-      const halfW = (params.width / 2) * 0.7; // shrink slightly so player can get close
-      const halfD = (params.depth / 2) * 0.7;
+      // Skip flat objects (rugs, shoes, pillow on floor)
+      if (cb.maxY < 0.15) continue;
+
+      const halfW = (cb.maxX - cb.minX) / 2 * 0.8;
+      const halfD = (cb.maxZ - cb.minZ) / 2 * 0.8;
+      const centerX = (cb.minX + cb.maxX) / 2;
+      const centerZ = (cb.minZ + cb.maxZ) / 2;
 
       if (
-        x + playerRadius > hitWorld.x - halfW &&
-        x - playerRadius < hitWorld.x + halfW &&
-        z + playerRadius > hitWorld.z - halfD &&
-        z - playerRadius < hitWorld.z + halfD
+        x + playerRadius > centerX - halfW &&
+        x - playerRadius < centerX + halfW &&
+        z + playerRadius > centerZ - halfD &&
+        z - playerRadius < centerZ + halfD
       ) {
         return true;
       }

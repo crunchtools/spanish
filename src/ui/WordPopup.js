@@ -10,7 +10,12 @@ export class WordPopup {
 
   show(wordData) {
     this.currentWord = wordData;
-    document.getElementById('wp-emoji').textContent = wordData.emoji;
+    const emojiEl = document.getElementById('wp-emoji');
+    if (wordData.image) {
+      emojiEl.innerHTML = `<img src="${wordData.image}" alt="${wordData.english}" style="width:80px;height:80px;object-fit:contain">`;
+    } else {
+      emojiEl.textContent = wordData.emoji;
+    }
     document.getElementById('wp-spanish').textContent = wordData.spanish;
     document.getElementById('wp-english').textContent = wordData.english;
     document.getElementById('word-popup-overlay').style.display = 'flex';

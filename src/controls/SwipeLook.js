@@ -4,6 +4,7 @@ export class SwipeLook {
   constructor(game) {
     this.game = game;
     this.isSwiping = false;
+    this.isPressed = false;
     this.startX = 0;
     this.startY = 0;
 
@@ -19,12 +20,15 @@ export class SwipeLook {
   }
 
   onPointerDown(event) {
+    this.isPressed = true;
     this.startX = event.clientX;
     this.startY = event.clientY;
     this.isSwiping = false;
   }
 
   onPointerMove(event) {
+    if (!this.isPressed) return;
+
     const dx = event.clientX - this.startX;
     const dy = event.clientY - this.startY;
     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -36,12 +40,13 @@ export class SwipeLook {
       const tpc = this.game.thirdPersonCamera;
       if (tpc) {
         const movementX = event.movementX || 0;
-        tpc.setOrbitAngle(tpc.orbitAngle - movementX * LOOK_SPEED);
+        tpc.setOrbitAngle(tpc.orbitAngle + movementX * LOOK_SPEED * 3);
       }
     }
   }
 
   onPointerUp() {
+    this.isPressed = false;
     // isSwiping flag stays true briefly so TapToMove/ObjectInteraction can check it
     if (this.isSwiping) {
       setTimeout(() => {
