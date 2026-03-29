@@ -322,7 +322,7 @@ export class VocabObject {
   addHitBox() {
     if (!this.mesh) return;
 
-    // Compute bounding box of the mesh
+    // Compute bounding box of the mesh in world space
     const box = new THREE.Box3().setFromObject(this.mesh);
     const size = new THREE.Vector3();
     const center = new THREE.Vector3();
@@ -330,15 +330,16 @@ export class VocabObject {
     box.getCenter(center);
 
     // Minimum clickable size
-    size.x = Math.max(size.x, 0.5);
-    size.y = Math.max(size.y, 0.5);
-    size.z = Math.max(size.z, 0.5);
+    size.x = Math.max(size.x, 0.6);
+    size.y = Math.max(size.y, 0.6);
+    size.z = Math.max(size.z, 0.6);
 
     const hitGeo = new THREE.BoxGeometry(size.x, size.y, size.z);
     const hitMat = new THREE.MeshBasicMaterial({ visible: false });
     this.hitBox = new THREE.Mesh(hitGeo, hitMat);
-    // Position relative to group origin
-    this.hitBox.position.copy(center).sub(this.group.position);
+    // Convert world-space center to group's local space (accounts for rotation)
+    this.group.updateWorldMatrix(true, false);
+    this.hitBox.position.copy(this.group.worldToLocal(center));
     this.group.add(this.hitBox);
   }
 
@@ -398,13 +399,34 @@ export class VocabObject {
 
   setHighlight(on) {
     if (!this.mesh) return;
-    const intensity = on ? 0.4 : 0;
-    const color = 0xfbbf24; // warm yellow highlight
     this.mesh.traverse((child) => {
-      if (child.isMesh && child.material && child.material.emissive) {
-        child.material.emissive.setHex(on ? color : 0x000000);
-        child.material.emissiveIntensity = intensity;
-      }
+      if (!child.isMesh || !child.material) return;
+      const mats = Array.isArray(child.material) ? child.material : [child.material];
+      mats.forEach((mat) => {
+        if (mat.emissive) {
+          // MeshStandardMaterial / MeshPhysicalMaterial
+          if (on) {
+            mat._savedEmissive = mat.emissive.getHex();
+            mat._savedEmissiveIntensity = mat.emissiveIntensity;
+            mat.emissive.setHex(0xfbbf24);
+            mat.emissiveIntensity = 0.5;
+          } else if (mat._savedEmissive !== undefined) {
+            mat.emissive.setHex(mat._savedEmissive);
+            mat.emissiveIntensity = mat._savedEmissiveIntensity;
+          } else {
+            mat.emissive.setHex(0x000000);
+            mat.emissiveIntensity = 0;
+          }
+        } else {
+          // MeshBasicMaterial or others — tint the color
+          if (on) {
+            mat._savedColor = mat.color.getHex();
+            mat.color.setHex(0xffdd88);
+          } else if (mat._savedColor !== undefined) {
+            mat.color.setHex(mat._savedColor);
+          }
+        }
+      });
     });
   }
 

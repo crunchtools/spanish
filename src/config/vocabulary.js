@@ -59,9 +59,9 @@ export const rooms = {
         english: 'window',
         word: 'ventana',
         model: 'window.glb',
-        position: { x: 3.2, y: 0.8, z: 0 },
+        position: { x: 3.45, y: 0.8, z: 0 },
         rotation: -Math.PI / 2,
-        scale: 0.7,
+        scale: 0.8,
       },
       {
         emoji: '\u{1F4DA}',
