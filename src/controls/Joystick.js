@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import { ROOM_WIDTH, ROOM_DEPTH } from '../utils/constants.js';
 
 /**
@@ -158,19 +159,57 @@ export class Joystick {
     const worldZ = (fwdZ * forward + rightZ * right) * speed * delta;
 
     const pos = player.group.position;
-    const newX = pos.x + worldX;
-    const newZ = pos.z + worldZ;
+    let newX = pos.x + worldX;
+    let newZ = pos.z + worldZ;
 
     // Clamp to room bounds
     const halfW = ROOM_WIDTH / 2 - 0.5;
     const halfD = ROOM_DEPTH / 2 - 0.5;
-    pos.x = Math.max(-halfW, Math.min(halfW, newX));
-    pos.z = Math.max(-halfD, Math.min(halfD, newZ));
+    newX = Math.max(-halfW, Math.min(halfW, newX));
+    newZ = Math.max(-halfD, Math.min(halfD, newZ));
+
+    // Collision detection — don't walk into objects
+    if (!this.checkCollision(newX, newZ)) {
+      pos.x = newX;
+      pos.z = newZ;
+    }
 
     // Face direction of movement
     if (Math.abs(worldX) > 0.001 || Math.abs(worldZ) > 0.001) {
       player.group.rotation.y = Math.atan2(worldX, worldZ);
     }
+  }
+
+  /**
+   * Check if position (x, z) collides with any vocab object.
+   * Uses hitbox bounding boxes for collision.
+   */
+  checkCollision(x, z) {
+    const room = this.game.sceneManager?.activeRoom;
+    if (!room) return false;
+
+    const playerRadius = 0.3;
+
+    for (const v of room.getVocabObjects()) {
+      if (!v.hitBox) continue;
+
+      const hitWorld = new THREE.Vector3();
+      v.hitBox.getWorldPosition(hitWorld);
+
+      const params = v.hitBox.geometry.parameters;
+      const halfW = (params.width / 2) * 0.7; // shrink slightly so player can get close
+      const halfD = (params.depth / 2) * 0.7;
+
+      if (
+        x + playerRadius > hitWorld.x - halfW &&
+        x - playerRadius < hitWorld.x + halfW &&
+        z + playerRadius > hitWorld.z - halfD &&
+        z - playerRadius < hitWorld.z + halfD
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 
   dispose() {

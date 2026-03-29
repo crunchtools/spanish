@@ -341,10 +341,10 @@ export class VocabObject {
     this.group.rotation.copy(savedRot);
     this.group.updateMatrixWorld(true);
 
-    // Minimum clickable size
-    size.x = Math.max(size.x, 0.6);
-    size.y = Math.max(size.y, 0.6);
-    size.z = Math.max(size.z, 0.6);
+    // Generous clickable size — 1.5x mesh with minimum 1.0
+    size.x = Math.max(size.x * 1.5, 1.0);
+    size.y = Math.max(size.y * 1.5, 1.0);
+    size.z = Math.max(size.z * 1.5, 1.0);
 
     const hitGeo = new THREE.BoxGeometry(size.x, size.y, size.z);
     const hitMat = new THREE.MeshBasicMaterial({ visible: false });

@@ -43,10 +43,10 @@ class Game {
 
     this.sceneManager = new SceneManager(this);
     this.hud = new HUD(this);
+    this.objectInteraction = new ObjectInteraction(this);
     this.tapToMove = new TapToMove(this);
     this.swipeLook = new SwipeLook(this);
     this.thirdPersonCamera = new ThirdPersonCamera(this.camera);
-    this.objectInteraction = new ObjectInteraction(this);
     this.joystick = new Joystick(this);
     this.characterCreator = new CharacterCreator(this);
 
