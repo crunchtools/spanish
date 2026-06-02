@@ -41,6 +41,38 @@ quay.io/crunchtools/mundo-de-palabras
 - AGPL license label
 - No secrets in build layers
 
+## Host Layout & Deployment
+
+Deployed on lotor at `/srv/spanish.crunchtools.com/` following the standard
+`code/` (build output), `config/` (httpd vhost), `data/` (httpd logs) convention.
+The container bind-mounts these directories and publishes `127.0.0.1:8091:80`
+behind the crunchtools reverse proxy.
+
+## Data Persistence
+
+Stateless — no database and no persistent volumes. All content is static
+(HTML/JS/CSS/GLB) served from `code/`; the only writable data is httpd logs
+under `data/`.
+
+## Monitoring
+
+Monitored by Zabbix: a web scenario against `https://spanish.crunchtools.com`
+plus a container-port check on `:8091`. There is no application-level state to
+monitor.
+
+## Testing
+
+| Test | What it verifies |
+|------|------------------|
+| **Build test** | `npm run build` + `podman build` succeed in CI |
+| **Smoke test** | Container starts and httpd serves `index.html` (health check on `:80`) |
+
+## Cascade Rebuild
+
+Rebuilds weekly and on `repository_dispatch` when the parent
+`ubi10-httpd-php` image updates (parent-image-updated cascade), picking up
+base-image security fixes.
+
 ## Quality Gates
 
 1. `npm run build` — Vite production build succeeds
