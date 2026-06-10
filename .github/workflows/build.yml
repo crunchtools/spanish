@@ -8,9 +8,6 @@ on:
   repository_dispatch:
     types: [parent-image-updated]
   workflow_dispatch:
-  schedule:
-    - cron: '0 6 * * 1'
-
 env:
   REGISTRY: quay.io
   IMAGE_NAME: crunchtools/mundo-de-palabras
