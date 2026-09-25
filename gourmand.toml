@@ -1,11 +1,3 @@
 # Gourmand configuration -- https://gitlab.com/mattdm/gourmand
-
-[global]
-excluded_paths = [
-    ".git/**",
-    ".github/**",
-    "node_modules/**",
-    "dist/**",
-    "package-lock.json",
-    "public/**",
-]
+# Exclusions do not go here: Gourmand ignores [global] excluded_paths in this
+# file. It already skips .gitignore'd paths; put any others in the exceptions config.
