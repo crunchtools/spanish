@@ -3,7 +3,7 @@
 > **Version:** 1.0.0
 > **Ratified:** 2026-03-28
 > **Status:** Active
-> **Inherits:** [crunchtools/constitution](https://github.com/crunchtools/constitution) v1.0.0
+> **Inherits:** [crunchtools/constitution](https://github.com/crunchtools/constitution) v1.17.0
 > **Profile:** Web Application
 
 3D Spanish vocabulary game for kids ages 5-8. Three.js first-person walkthrough with tap-to-move navigation, Kenney CC0 3D models, and 2D HTML overlay mini-games. Built with Vite, served as static files from httpd.
