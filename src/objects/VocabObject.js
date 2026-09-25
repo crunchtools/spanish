@@ -3,6 +3,7 @@ import { Tween, Easing } from '@tweenjs/tween.js';
 import { tweenGroup } from '../utils/tweenGroup.js';
 import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { GLOW_COLOR, GLOW_INTENSITY, GLOW_PULSE_SPEED } from '../utils/constants.js';
+import { disposeObject3D } from '../utils/disposeObject3D.js';
 
 // Word-specific geometric models for items without GLB files
 const GEOMETRIC_MODELS = {
@@ -836,15 +837,6 @@ export class VocabObject {
     if (this.label) {
       this.label.element.remove();
     }
-    this.group.traverse((child) => {
-      if (child.geometry) child.geometry.dispose();
-      if (child.material) {
-        if (Array.isArray(child.material)) {
-          child.material.forEach((m) => m.dispose());
-        } else {
-          child.material.dispose();
-        }
-      }
-    });
+    disposeObject3D(this.group);
   }
 }

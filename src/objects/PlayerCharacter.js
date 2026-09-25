@@ -3,6 +3,7 @@ import { Tween, Easing } from '@tweenjs/tween.js';
 import { tweenGroup } from '../utils/tweenGroup.js';
 import { CharacterBuilder } from './CharacterBuilder.js';
 import { TWEEN_DURATION } from '../utils/constants.js';
+import { disposeObject3D } from '../utils/disposeObject3D.js';
 
 export class PlayerCharacter {
   constructor(config) {
@@ -32,16 +33,7 @@ export class PlayerCharacter {
     const parent = this.group.parent;
 
     // Dispose old
-    this.group.traverse((child) => {
-      if (child.geometry) child.geometry.dispose();
-      if (child.material) {
-        if (Array.isArray(child.material)) {
-          child.material.forEach((m) => m.dispose());
-        } else {
-          child.material.dispose();
-        }
-      }
-    });
+    disposeObject3D(this.group);
     if (parent) parent.remove(this.group);
 
     // Build new
@@ -158,15 +150,6 @@ export class PlayerCharacter {
   dispose() {
     if (this.walkTween) this.walkTween.stop();
     this.stopWalkAnimation();
-    this.group.traverse((child) => {
-      if (child.geometry) child.geometry.dispose();
-      if (child.material) {
-        if (Array.isArray(child.material)) {
-          child.material.forEach((m) => m.dispose());
-        } else {
-          child.material.dispose();
-        }
-      }
-    });
+    disposeObject3D(this.group);
   }
 }

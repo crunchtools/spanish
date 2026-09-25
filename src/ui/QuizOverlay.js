@@ -51,7 +51,7 @@ export class QuizOverlay {
     const options = shuffle([question, ...wrongOptions]);
 
     const container = document.getElementById('quiz-options-area');
-    container.innerHTML = '';
+    container.replaceChildren();
 
     options.forEach((opt) => {
       const btn = document.createElement('button');

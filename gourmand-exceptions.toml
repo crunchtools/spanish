@@ -1,0 +1,35 @@
+[[exceptions]]
+check = "DC004-dead_structs"
+path = "src/scenes/rooms/RoomBase.js"
+justification = "Abstract base class: BedroomScene extends RoomBase and is instantiated via the SceneManager room registry (new RoomClass(this.game)). Base classes are never instantiated directly by design."
+classification = "gourmand_bug"
+
+[[exceptions]]
+check = "DC004-dead_structs"
+path = "src/scenes/rooms/BedroomScene.js"
+justification = "Instantiated indirectly: SceneManager maps { bedroom: BedroomScene } and calls new RoomClass(this.game) on the looked-up class, which the dead-class check cannot follow."
+classification = "gourmand_bug"
+
+[[exceptions]]
+check = "DC004-dead_structs"
+path = "src/objects/CharacterBuilder.js"
+justification = "Static factory class, used as CharacterBuilder.create(config) from PlayerCharacter.js and CharacterCreator.js. It is never meant to be constructed with new."
+classification = "gourmand_bug"
+
+[[exceptions]]
+check = "CQ001-hyperbolic_language"
+path = "index.html"
+justification = "The flagged word is part of the standard viewport meta directive that disables pinch-zoom for the touch game, not prose."
+classification = "gourmand_bug"
+
+[[exceptions]]
+check = "DC004-dead_structs"
+path = "src/objects/VocabObject.js"
+justification = "Instantiated in RoomBase.addVocabObjects (new VocabObject(wordData, this.game)), one per vocabulary word. The check marks it dead only because it also treats RoomBase as dead (see the RoomBase exception above)."
+classification = "gourmand_bug"
+
+[[exceptions]]
+check = "DC004-dead_structs"
+path = "src/systems/AssetLoader.js"
+justification = "Instantiated in the RoomBase constructor (this.assetLoader = new AssetLoader()) and used to load each room's GLB models. Flagged only through the same RoomBase false positive."
+classification = "gourmand_bug"

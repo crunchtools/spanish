@@ -1,9 +1,8 @@
 import * as THREE from 'three';
 import { ROOM_WIDTH, ROOM_DEPTH, ROOM_HEIGHT } from '../../utils/constants.js';
 import { VocabObject } from '../../objects/VocabObject.js';
-import { WaypointArrow } from '../../objects/WaypointArrow.js';
-import { GuideModel } from '../../objects/GuideModel.js';
 import { AssetLoader } from '../../systems/AssetLoader.js';
+import { disposeObject3D } from '../../utils/disposeObject3D.js';
 
 export class RoomBase {
   constructor(game, roomData) {
@@ -12,7 +11,6 @@ export class RoomBase {
     this.scene = new THREE.Scene();
     this.vocabObjects = [];
     this.waypointArrows = [];
-    this.guide = null;
     this.assetLoader = new AssetLoader();
     this.floor = null;
   }
@@ -21,7 +19,6 @@ export class RoomBase {
     this.buildRoom();
     this.addLighting();
     this.addWaypoints();
-    this.addGuide();
     await this.addVocabObjects();
   }
 
@@ -115,12 +112,6 @@ export class RoomBase {
     // Waypoint arrows disabled — joystick is the primary movement control
   }
 
-  addGuide() {
-    // Guide disabled for now — will return in a later room
-    // this.guide = new GuideModel(this.roomData.guide, this.game);
-    // this.scene.add(this.guide.sprite);
-  }
-
   async addVocabObjects() {
     const loadPromises = this.roomData.words.map(async (wordData) => {
       const vocabObj = new VocabObject(wordData, this.game);
@@ -134,13 +125,10 @@ export class RoomBase {
   update(delta) {
     this.vocabObjects.forEach((obj) => obj.update(delta));
     this.waypointArrows.forEach((arrow) => arrow.update(delta));
-    if (this.guide) {
-      this.guide.update(delta);
-    }
   }
 
   getSpawnPoint() {
-    // Spawn at center of room so camera has room behind the character
+    // The centre leaves the third-person camera space behind the character.
     const center = this.roomData.waypoints.find((wp) => wp.label === 'center');
     return center || this.roomData.waypoints[0] || { x: 0, z: 0 };
   }
@@ -160,16 +148,6 @@ export class RoomBase {
   dispose() {
     this.vocabObjects.forEach((obj) => obj.dispose());
     this.waypointArrows.forEach((arrow) => arrow.dispose());
-    if (this.guide) this.guide.dispose();
-    this.scene.traverse((child) => {
-      if (child.geometry) child.geometry.dispose();
-      if (child.material) {
-        if (Array.isArray(child.material)) {
-          child.material.forEach((m) => m.dispose());
-        } else {
-          child.material.dispose();
-        }
-      }
-    });
+    disposeObject3D(this.scene);
   }
 }

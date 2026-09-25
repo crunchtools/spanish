@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { CharacterBuilder, DEFAULT_CHARACTER } from '../objects/CharacterBuilder.js';
+import { disposeObject3D } from '../utils/disposeObject3D.js';
 
 const HAIR_STYLES = ['short', 'long', 'ponytail', 'curly'];
 
@@ -113,16 +114,7 @@ export class CharacterCreator {
     // Remove old character
     if (this.previewCharacter) {
       this.previewScene.remove(this.previewCharacter);
-      this.previewCharacter.traverse((child) => {
-        if (child.geometry) child.geometry.dispose();
-        if (child.material) {
-          if (Array.isArray(child.material)) {
-            child.material.forEach((m) => m.dispose());
-          } else {
-            child.material.dispose();
-          }
-        }
-      });
+      disposeObject3D(this.previewCharacter);
     }
 
     this.previewCharacter = CharacterBuilder.create(this.config);
@@ -202,7 +194,7 @@ export class CharacterCreator {
 
   setupOptionButtons(containerId, options, currentValue, onChange, labelFn) {
     const container = document.getElementById(containerId);
-    container.innerHTML = '';
+    container.replaceChildren();
 
     options.forEach((opt) => {
       const btn = document.createElement('button');
@@ -219,7 +211,7 @@ export class CharacterCreator {
 
   setupColorSwatches(containerId, colors, currentColor, onChange) {
     const container = document.getElementById(containerId);
-    container.innerHTML = '';
+    container.replaceChildren();
 
     colors.forEach((color) => {
       const swatch = document.createElement('button');
@@ -240,16 +232,7 @@ export class CharacterCreator {
       this.animationId = null;
     }
     if (this.previewCharacter) {
-      this.previewCharacter.traverse((child) => {
-        if (child.geometry) child.geometry.dispose();
-        if (child.material) {
-          if (Array.isArray(child.material)) {
-            child.material.forEach((m) => m.dispose());
-          } else {
-            child.material.dispose();
-          }
-        }
-      });
+      disposeObject3D(this.previewCharacter);
       this.previewCharacter = null;
     }
     if (this.previewRenderer) {

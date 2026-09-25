@@ -20,7 +20,6 @@ export class TapToMove {
     if (this.game.swipeLook.isSwiping) return;
     if (this.game.objectInteraction.justInteracted) return;
 
-    // Check if tap hit a waypoint arrow
     const pointer = new THREE.Vector2(
       (event.clientX / window.innerWidth) * 2 - 1,
       -(event.clientY / window.innerHeight) * 2 + 1

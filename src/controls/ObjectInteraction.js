@@ -126,14 +126,12 @@ export class ObjectInteraction {
     // Show word popup
     this.game.hud.showWordPopup(wordData);
 
-    // Update progress
     const roomData = this.room.roomData;
     const totalWords = roomData.words.length;
     const learnedInRoom = roomData.words.filter(
       (w) => this.game.progress.isWordLearned(w.word)
     ).length;
 
-    // Check if all words learned
     const roomId = this.game.sceneManager.currentRoomId;
     if (learnedInRoom === totalWords && this.game.progress.getStars(roomId) < 1) {
       this.game.progress.setStars(roomId, 1);
@@ -150,8 +148,6 @@ export class ObjectInteraction {
         `${enc} ${learnedInRoom}/${totalWords} words learned!`
       );
     }
-
-    // Jokes disabled for now — will revisit placement later
   }
 
   dispose() {
