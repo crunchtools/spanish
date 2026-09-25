@@ -39,7 +39,7 @@ export class MatchingOverlay {
     const shuffled = shuffle(cards);
 
     const grid = document.getElementById('matching-grid');
-    grid.innerHTML = '';
+    grid.replaceChildren();
 
     shuffled.forEach((card, index) => {
       const div = document.createElement('div');
@@ -48,7 +48,10 @@ export class MatchingOverlay {
       div.dataset.index = index;
 
       if (card.type === 'emoji') {
-        div.innerHTML = `<span style="font-size:1.8rem">${card.value}</span>`;
+        const span = document.createElement('span');
+        span.style.fontSize = '1.8rem';
+        span.textContent = card.value;
+        div.appendChild(span);
       } else {
         div.textContent = card.value;
         div.style.fontSize = '0.85rem';

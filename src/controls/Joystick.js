@@ -102,7 +102,6 @@ export class Joystick {
       offsetY = (offsetY / dist) * this.maxRadius;
     }
 
-    // Update visual
     this.stick.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
 
     // Normalize to -1..1

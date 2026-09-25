@@ -32,7 +32,6 @@ export class SceneManager {
 
     await this.activeRoom.load();
 
-    // Add player character to scene at spawn waypoint
     const player = this.game.playerCharacter;
     if (player) {
       const spawnWp = this.activeRoom.getSpawnPoint();
@@ -43,7 +42,7 @@ export class SceneManager {
     // Position camera — let ThirdPersonCamera calculate clamped position
     if (this.game.thirdPersonCamera && player) {
       const tpc = this.game.thirdPersonCamera;
-      // Run update once with instant snap (no lerp) to set initial position
+      // Snap (no lerp) so the first frame starts at the clamped position.
       tpc.update(player.getPosition(), true);
     }
 
@@ -75,18 +74,15 @@ export class SceneManager {
       this.activeRoom.update(delta);
     }
 
-    // Update joystick movement
     if (this.game.joystick) {
       this.game.joystick.update(delta);
     }
 
-    // Update player character
     const player = this.game.playerCharacter;
     if (player) {
       player.update(delta);
     }
 
-    // Update third person camera to follow player
     const tpc = this.game.thirdPersonCamera;
     if (tpc && player) {
       tpc.update(player.getPosition());

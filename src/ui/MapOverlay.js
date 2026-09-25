@@ -20,7 +20,6 @@ export class MapOverlay {
     const totalStars = this.game.progress.getTotalStars();
     document.getElementById('map-total-stars').textContent = totalStars;
 
-    // Update bedroom stars
     const bedroomStars = this.game.progress.getStars('bedroom');
     const starDisplay = '\u2605'.repeat(bedroomStars) + '\u2606'.repeat(3 - bedroomStars);
     document.getElementById('map-bedroom-stars').textContent = starDisplay;

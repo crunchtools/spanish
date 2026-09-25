@@ -7,13 +7,22 @@ export class JokePopup {
 
   show(joke) {
     const content = document.getElementById('joke-content-area');
-    content.innerHTML = `
-      <div class="joke-line">${joke.setup}</div>
-      <div class="joke-line" style="color:#b45309">${joke.who}</div>
-      <div class="joke-line">${joke.punchSetup}</div>
-      <div class="joke-line" style="color:#b45309">${joke.punchWho}</div>
-      <div class="joke-line joke-punchline">${joke.punchline}</div>
-    `;
+    const lines = [
+      [joke.setup, false],
+      [joke.who, true],
+      [joke.punchSetup, false],
+      [joke.punchWho, true],
+    ].map(([text, isReply]) => {
+      const div = document.createElement('div');
+      div.className = 'joke-line';
+      if (isReply) div.style.color = '#b45309';
+      div.textContent = text;
+      return div;
+    });
+    const punchline = document.createElement('div');
+    punchline.className = 'joke-line joke-punchline';
+    punchline.textContent = joke.punchline;
+    content.replaceChildren(...lines, punchline);
     document.getElementById('joke-overlay').style.display = 'flex';
   }
 

@@ -12,7 +12,11 @@ export class WordPopup {
     this.currentWord = wordData;
     const emojiEl = document.getElementById('wp-emoji');
     if (wordData.image) {
-      emojiEl.innerHTML = `<img src="${wordData.image}" alt="${wordData.english}" style="width:80px;height:80px;object-fit:contain">`;
+      const img = document.createElement('img');
+      img.src = wordData.image;
+      img.alt = wordData.english;
+      img.style.cssText = 'width:80px;height:80px;object-fit:contain';
+      emojiEl.replaceChildren(img);
     } else {
       emojiEl.textContent = wordData.emoji;
     }

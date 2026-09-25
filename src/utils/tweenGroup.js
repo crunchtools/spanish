@@ -1,5 +1,5 @@
 import { Group } from '@tweenjs/tween.js';
 
-// Shared tween group — workaround for tween.js v25 mainGroup not working
-// with Vite's pre-bundled ESM. All tweens must use this group explicitly.
+// tween.js v25's mainGroup never ticks under Vite's pre-bundled ESM, so every
+// tween must be added to this shared group, which the render loop updates.
 export const tweenGroup = new Group();

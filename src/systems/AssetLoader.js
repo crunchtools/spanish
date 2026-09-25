@@ -23,8 +23,9 @@ export class AssetLoader {
       this.hideLoadingBar();
     };
 
-    this.loadingManager.onError = () => {
-      // Don't block on failed loads — placeholders handle it
+    // Failed loads don't block startup; VocabObject falls back to a placeholder.
+    this.loadingManager.onError = (url) => {
+      console.warn(`Asset failed to load: ${url}`);
     };
   }
 
@@ -52,9 +53,9 @@ export class AssetLoader {
   }
 
   updateLoadingBar(progress) {
-    const bar = document.getElementById('loading-bar-fill');
+    const fillEl = document.getElementById('loading-bar-fill');
     const text = document.getElementById('loading-text');
-    if (bar) bar.style.width = `${progress}%`;
+    if (fillEl) fillEl.style.width = `${progress}%`;
     if (text) text.textContent = `Loading... ${Math.round(progress)}%`;
   }
 

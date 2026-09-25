@@ -1,0 +1,11 @@
+# Gourmand configuration -- https://gitlab.com/mattdm/gourmand
+
+[global]
+excluded_paths = [
+    ".git/**",
+    ".github/**",
+    "node_modules/**",
+    "dist/**",
+    "package-lock.json",
+    "public/**",
+]
