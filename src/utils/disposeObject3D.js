@@ -1,4 +1,8 @@
-// Free GPU geometry and material buffers for every mesh under `root`.
+/**
+ * Release the GPU geometry and material buffers of `root` and every descendant.
+ * The objects stay in the scene graph; callers remove them separately.
+ * @param {import('three').Object3D} root
+ */
 export function disposeObject3D(root) {
   root.traverse((child) => {
     if (child.geometry) child.geometry.dispose();
