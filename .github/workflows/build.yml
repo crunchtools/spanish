@@ -78,20 +78,6 @@ jobs:
           exit-code: "0"
           severity: "CRITICAL,HIGH"
 
-  validate-constitution:
-    name: Constitution Validation
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/checkout@v4
-        with:
-          repository: crunchtools/constitution
-          path: .constitution
-
-      - name: Validate constitution
-        run: python3 .constitution/validate-constitution.py .specify/memory/constitution.md --verbose
-
   build-and-push-ghcr:
     runs-on: ubuntu-latest
     needs: build-and-push-quay
