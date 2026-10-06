@@ -4,7 +4,7 @@
 > **Ratified:** 2026-03-28
 > **Amended:** 2026-10-02
 > **Status:** Active
-> **Inherits:** [crunchtools/constitution](https://github.com/crunchtools/constitution) v1.18.0
+> **Inherits:** [crunchtools/constitution](https://github.com/crunchtools/constitution) v1.20.0
 > **Profile:** Web Application
 
 A 3D Spanish vocabulary game for kids aged 5 to 8: a Three.js first-person
