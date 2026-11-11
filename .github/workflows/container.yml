@@ -1,0 +1,27 @@
+name: Container
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  # ubi10-httpd-php was promoted: rebuild on it, gated before anything moves.
+  repository_dispatch:
+    types: [parent-image-updated]
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+permissions: {}
+jobs:
+  container:
+    uses: crunchtools/constitution/.github/workflows/container-release.yml@v1.39.1
+    permissions:
+      contents: read
+      pull-requests: read
+    with:
+      image: quay.io/crunchtools/mundo-de-palabras
+      boot: systemd
+      boot-units: httpd.service php-fpm.service
+      contract-test: tests/image/serve-gate.sh
+    secrets:
+      QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
+      QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
