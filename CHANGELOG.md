@@ -6,6 +6,11 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-11-13
+
+### Security
+- Rebuilt on ubi10-httpd with mod_http2 2.0.29-5.el10_3.1 (CVE-2026-119618).
+
 ## [1.0.1] - 2026-11-11
 
 ### Changed
