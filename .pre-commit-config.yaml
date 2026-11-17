@@ -1,17 +1,36 @@
+# Every check runs from quay.io/crunchtools/sdlc (constitution XII). Nothing
+# here pins it: .sdlc/bin/sdlc asks the image for its own launcher and runs it,
+# so the launcher, the image and every tool inside it float together on
+# :latest -- for this laptop and, through .github/workflows/ci.yml, for CI.
+# There is no `rev:` to bump, ever.
+#
+#   SDLC_IMAGE=main git push   judges this push with what has merged to
+#                              python-sdlc and not been released. A repo opts
+#                              its CI in with the repository variable SDLC_IMAGE.
+#
+# What each hook runs is configured in pyproject.toml ([tool.sdlc.commit],
+# [tool.sdlc.push], [tool.sdlc.ci]) or, in a repo with no pyproject.toml,
+# sdlc.toml. `.sdlc/bin/sdlc tiers` prints it.
+#
+# `default_install_hook_types` must name both: without pre-push, `pre-commit
+# install` wires only the commit hook and every verdict silently stops running.
+
+default_install_hook_types: [pre-commit, pre-push]
+
 repos:
   - repo: local
     hooks:
-      - id: gatehouse
-        name: Gatehouse (AI code review, staged diff)
-        entry: bash -c 'git diff --cached | podman --events-backend=none run --rm --log-driver=none -i --env-file "$HOME/.config/mcp-env/gatehouse.env" -v .:/src:ro,Z -w /src quay.io/crunchtools/gatehouse:latest --stdin'
+      - id: sdlc-commit
+        name: sdlc commit
+        entry: .sdlc/bin/sdlc commit
         language: system
         pass_filenames: false
         always_run: true
         stages: [pre-commit, pre-merge-commit]
-      - id: gourmand
-        name: Gourmand (AI slop detection)
-        entry: podman --events-backend=none run --rm --log-driver=none -v .:/src:Z -w /src quay.io/crunchtools/gourmand:latest check --full
+      - id: sdlc-push
+        name: sdlc push
+        entry: .sdlc/bin/sdlc push
         language: system
         pass_filenames: false
         always_run: true
-        stages: [pre-commit, pre-merge-commit]
+        stages: [pre-push]
