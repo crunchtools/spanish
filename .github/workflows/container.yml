@@ -23,6 +23,13 @@ jobs:
       boot: systemd
       boot-units: httpd.service php-fpm.service
       contract-test: tests/image/serve-gate.sh
+      # Hosts refuse an unsigned quay.io/crunchtools image
+      # (crunchtools/rhel10-bootc-server#47). Promote signs the gated digest
+      # before any tag moves, with the key from this repo's cosign-signing
+      # environment (default branch and v* only); without it promote refuses.
+      sign: true
     secrets:
       QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
       QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+      COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+      COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
