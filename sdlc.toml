@@ -2,4 +2,10 @@
 repo-kinds = ["web-application"]
 # Written by python-sdlc's scripts/convert_repo.py: the image has no checks
 # for these stacks yet, and a stack it cannot check makes every run exit 2.
-skip-stacks = ["node"]
+
+[tool.sdlc.image]
+# Written by crunchtools/sdlc's scripts/convert_repo.py: moved from the workflows.
+image = "quay.io/crunchtools/mundo-de-palabras"
+boot = "systemd"
+boot-units = "httpd.service php-fpm.service"
+contract-test = "tests/image/serve-gate.sh"
