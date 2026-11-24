@@ -1,4 +1,5 @@
 [tool.sdlc]
+repo-kinds = ["web-application"]
 # Written by python-sdlc's scripts/convert_repo.py: the image has no checks
 # for these stacks yet, and a stack it cannot check makes every run exit 2.
 skip-stacks = ["node"]
