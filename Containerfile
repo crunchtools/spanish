@@ -1,7 +1,7 @@
-# Stage 1: Build with Hummingbird's Node.js 22 builder (Red Hat signed, so the
-# image gate can verify it). It runs as 65532 in /app with HOME=/tmp, so the
-# sources are copied in owned by that user for npm ci to write node_modules.
-FROM registry.access.redhat.com/hi/nodejs:22-builder AS builder
+# Stage 1: Build with Hummingbird's Node.js 22 builder, pinned by digest and
+# Red Hat signed, so the image gate can verify it. It runs as 65532 in /app with
+# HOME=/tmp, so the sources are copied in owned by that user for npm ci.
+FROM registry.access.redhat.com/hi/nodejs:22-builder@sha256:9c710e0c921c2482b94592481a25b1edc59074f5895d66749602fd6ad3dad15b AS builder
 
 WORKDIR /app
 
