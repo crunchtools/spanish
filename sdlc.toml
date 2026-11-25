@@ -4,8 +4,6 @@ repo-kinds = ["web-application"]
 # for these stacks yet, and a stack it cannot check makes every run exit 2.
 
 [tool.sdlc.image]
-# Written by crunchtools/sdlc's scripts/convert_repo.py: moved from the workflows.
-image = "quay.io/crunchtools/mundo-de-palabras"
 boot = "systemd"
 boot-units = "httpd.service php-fpm.service"
 
