@@ -1,5 +1,21 @@
 [tool.sdlc]
 repo-kinds = ["web-application"]
-# Written by python-sdlc's scripts/convert_repo.py: the image has no checks
-# for these stacks yet, and a stack it cannot check makes every run exit 2.
-skip-stacks = ["node"]
+
+# The game has no linter or test suite: package.json defines only dev, build
+# and preview, and a check with nothing to run must not report a pass.
+[tool.sdlc.push]
+skip = ["npm-lint", "npm-test"]
+
+[tool.sdlc.image]
+boot = "systemd"
+boot-units = "httpd.service php-fpm.service"
+
+[tool.sdlc.ci]
+checks = ["contract"]
+
+# The contract test, run inside the image this run built. sdlc's image job does
+# not run contract-test (crunchtools/sdlc#118), so it is a check that does.
+[tool.sdlc.ci.contract]
+kind = "command"
+image = "localhost/spanish:sdlc"
+argv = ["sh", "tests/image/serve-gate.sh"]
