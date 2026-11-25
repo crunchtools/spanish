@@ -8,4 +8,13 @@ repo-kinds = ["web-application"]
 image = "quay.io/crunchtools/mundo-de-palabras"
 boot = "systemd"
 boot-units = "httpd.service php-fpm.service"
-contract-test = "tests/image/serve-gate.sh"
+
+[tool.sdlc.ci]
+checks = ["contract"]
+
+# The contract test, run inside the image this run built. sdlc's image job does
+# not run contract-test (crunchtools/sdlc#118), so it is a check that does.
+[tool.sdlc.ci.contract]
+kind = "command"
+image = "localhost/spanish:sdlc"
+argv = ["sh", "tests/image/serve-gate.sh"]
