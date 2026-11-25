@@ -6,7 +6,11 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-11-25
+
 ### Changed
+- CI is the fleet ci.yml (sdlc 0.15): one image build per release, published
+  as `quay.io/crunchtools/spanish` (was `quay.io/crunchtools/mundo-de-palabras`).
 - Promote signs the image with the fleet cosign key (`sign: true`), because
   bootc hosts are moving to trust only signed `quay.io/crunchtools` images
   (crunchtools/rhel10-bootc-server#47). Needs the repo's `cosign-signing`
@@ -16,6 +20,9 @@ All notable changes to this project are documented here. The format follows
   (was v1.46.0) and grants it `issues: write`, so a failed scheduled rebuild
   opens an issue instead of only warning. A `v*` promote now also refuses an
   image whose `version` label names a different release of this repo.
+
+### Security
+- `npm audit fix` for the vite, postcss, nanoid and source-map-js advisories.
 
 ## [1.0.2] - 2026-11-13
 
