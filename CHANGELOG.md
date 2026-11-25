@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-11-25
+
 ### Fixed
 - The build stage uses Hummingbird's `registry.access.redhat.com/hi/nodejs:22-builder`
   (pinned by digest) instead of `docker.io/library/node:22-slim`, which the image gate refuses as an
