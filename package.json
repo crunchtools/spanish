@@ -1,6 +1,6 @@
 {
   "name": "mundo-de-palabras",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "3D Spanish vocabulary game for kids",
   "type": "module",
   "scripts": {
