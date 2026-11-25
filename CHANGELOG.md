@@ -6,6 +6,12 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+- The build stage uses Hummingbird's `registry.access.redhat.com/hi/nodejs:22-builder`
+  (pinned by digest) instead of `docker.io/library/node:22-slim`, which the image gate refuses as an
+  untrusted parent. A `.containerignore` keeps local `node_modules`, `dist` and
+  `.git` out of the build context.
+
 ## [1.0.3] - 2026-11-25
 
 ### Changed
